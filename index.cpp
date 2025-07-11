@@ -33,6 +33,24 @@ struct Bid {
     }
 };
 
+void displayMenu() const {
+        cout << "\n=== Auction System Menu ===" << endl;
+        cout << "1. Register User" << endl;
+        cout << "2. Login" << endl;
+        cout << "3. Logout" << endl;
+        cout << "4. Create Auction" << endl;
+        cout << "5. Place Bid" << endl;
+        cout << "6. View Active Auctions" << endl;
+        cout << "7. View Auction Details" << endl;
+        cout << "8. View User Profile" << endl;
+        cout << "9. View Bid History" << endl;
+        cout << "10. End Auction" << endl;
+        cout << "11. Add Balance" << endl;
+        cout << "12. Search Auctions" << endl;
+        cout << "13. View Top Bidders" << endl;
+        cout << "0. Exit" << endl;
+        cout << "Choice: ";
+}
 
 
 void run() {
