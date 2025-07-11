@@ -11,3 +11,143 @@
 using namespace std;
 using namespace chrono;
 
+class User;
+class Auction;
+class AuctionSystem;
+
+struct Bid {
+    string userId;
+    double amount;
+    time_point<steady_clock> timestamp;
+    string itemId;
+    
+    Bid(const string& uid, double amt, const string& iid)
+        : userId(uid), amount(amt), timestamp(steady_clock::now()), itemId(iid) {}
+    
+    // For priority queue (max heap based on amount)
+    bool operator<(const Bid& other) const {
+        if (amount != other.amount) {
+            return amount < other.amount; // Higher amount has higher priority
+        }
+        return timestamp > other.timestamp; // Earlier timestamp has higher priority for same amount
+    }
+};
+
+
+
+void run() {
+        int choice;
+        string input, username, email, itemName, description, itemId, keyword;
+        double startingPrice, reservePrice, amount;
+        int duration;
+        
+        cout << "Welcome to Advanced Auction System!" << endl;
+        
+        while (true) {
+            displayMenu();
+            cin >> choice;
+            cin.ignore(); // Clear input buffer
+            
+            switch (choice) {
+                case 1:
+                    cout << "Enter username: ";
+                    getline(cin, username);
+                    cout << "Enter email: ";
+                    getline(cin, email);
+                    registerUser(username, email);
+                    break;
+                    
+                case 2:
+                    cout << "Enter username: ";
+                    getline(cin, username);
+                    loginUser(username);
+                    break;
+                    
+                case 3:
+                    logoutUser();
+                    break;
+                    
+                case 4:
+                    cout << "Enter item name: ";
+                    getline(cin, itemName);
+                    cout << "Enter description: ";
+                    getline(cin, description);
+                    cout << "Enter starting price: $";
+                    cin >> startingPrice;
+                    cout << "Enter reserve price: $";
+                    cin >> reservePrice;
+                    cout << "Enter duration (minutes): ";
+                    cin >> duration;
+                    createAuction(itemName, description, startingPrice, reservePrice, duration);
+                    break;
+                    
+                case 5:
+                    cout << "Enter item ID: ";
+                    getline(cin, itemId);
+                    cout << "Enter bid amount: $";
+                    cin >> amount;
+                    placeBid(itemId, amount);
+                    break;
+                    
+                case 6:
+                    displayActiveAuctions();
+                    break;
+                    
+                case 7:
+                    cout << "Enter item ID: ";
+                    getline(cin, itemId);
+                    displayAuctionDetails(itemId);
+                    break;
+                    
+                case 8:
+                    displayUserProfile();
+                    break;
+                    
+                case 9:
+                    cout << "Enter item ID: ";
+                    getline(cin, itemId);
+                    displayBidHistory(itemId);
+                    break;
+                    
+                case 10:
+                    cout << "Enter item ID: ";
+                    getline(cin, itemId);
+                    endAuction(itemId);
+                    break;
+                    
+                case 11:
+                    cout << "Enter amount to add: $";
+                    cin >> amount;
+                    addBalance(amount);
+                    break;
+                    
+                case 12:
+                    cout << "Enter search keyword: ";
+                    getline(cin, keyword);
+                    searchAuctions(keyword);
+                    break;
+                    
+                case 13:
+                    cout << "Enter item ID: ";
+                    getline(cin, itemId);
+                    displayTopBidders(itemId);
+                    break;
+                    
+                case 0:
+                    cout << "Thank you for using Advanced Auction System!" << endl;
+                    return;
+                    
+                default:
+                    cout << "Invalid choice! Please try again." << endl;
+            }
+        }
+    }
+};
+
+
+
+int main() {
+    AuctionSystem system;
+    system.run();
+    return 0;
+}
