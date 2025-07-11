@@ -33,6 +33,32 @@ struct Bid {
     }
 };
 
+void displayTopBidders(const string& itemId) const {
+        if (auctions.find(itemId) == auctions.end()) {
+            cout << "Auction not found!" << endl;
+            return;
+        }
+        
+        auto userBids = auctions.at(itemId).getUserBids();
+        vector<pair<string, double>> bidders;
+        
+        for (const auto& pair : userBids) {
+            bidders.push_back({pair.first, pair.second});
+        }
+        
+        sort(bidders.begin(), bidders.end(), [](const pair<string, double>& a, const pair<string, double>& b) {
+            return a.second > b.second;
+        });
+        
+        cout << "\n=== Top Bidders for " << itemId << " ===" << endl;
+        int rank = 1;
+        for (const auto& bidder : bidders) {
+            cout << rank++ << ". " << bidder.first << " - $" << bidder.second << endl;
+            if (rank > 5) break; // Show top 5 only
+        }
+    }
+
+
 void displayMenu() const {
         cout << "\n=== Auction System Menu ===" << endl;
         cout << "1. Register User" << endl;
