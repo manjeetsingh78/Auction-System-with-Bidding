@@ -33,6 +33,23 @@ struct Bid {
     }
 };
 
+void searchAuctions(const string& keyword) const {
+        cout << "\n=== Search Results for: " << keyword << " ===" << endl;
+        bool found = false;
+        
+        for (const auto& pair : auctions) {
+            const auto& item = pair.second.getItem();
+            if (item.name.find(keyword) != string::npos || item.description.find(keyword) != string::npos) {
+                found = true;
+                cout << "ID: " << item.id << " | " << item.name << " | Current Price: $" << pair.second.getCurrentPrice()<< " | Status: " << (pair.second.isActive() ? "Active" : "Ended") << endl;
+            }
+        }
+        
+        if (!found) {
+            cout << "No auctions found matching: " << keyword << endl;
+        }
+    }
+
 void displayTopBidders(const string& itemId) const {
         if (auctions.find(itemId) == auctions.end()) {
             cout << "Auction not found!" << endl;
