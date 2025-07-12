@@ -33,6 +33,30 @@ struct Bid {
     }
 };
 
+    bool placeBid(const string& itemId, double amount) {
+        if (currentUserId.empty()) {
+            cout << "Please login first!" << endl;
+            return false;
+        }
+        
+        if (auctions.find(itemId) == auctions.end()) {
+            cout << "Auction not found!" << endl;
+            return false;
+        }
+        
+        if (!users[currentUserId].canBid(amount)) {
+            cout << "Insufficient balance! Your balance: $" << users[currentUserId].balance << endl;
+            return false;
+        }
+        
+        if (auctions[itemId].placeBid(currentUserId, amount)) {
+            users[currentUserId].addBidToHistory(itemId);
+            return true;
+        }
+        return false;
+    }
+
+
     void displayActiveAuctions() const {
         cout << "\n=== Active Auctions ===" << endl;
         bool hasActive = false;
