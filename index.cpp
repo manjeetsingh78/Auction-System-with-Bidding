@@ -121,6 +121,19 @@ struct Bid {
         }
     }
 
+    bool loginUser(const string& username) {
+        for (const auto& pair : users) {
+            if (pair.second.username == username) {
+                currentUserId = pair.first;
+                cout << "Login successful! Welcome " << username << endl;
+                return true;
+            }
+        }
+        cout << "User not found!" << endl;
+        return false;
+    }
+
+
     void logoutUser() {
         currentUserId = "";
         cout << "Logged out successfully!" << endl;
