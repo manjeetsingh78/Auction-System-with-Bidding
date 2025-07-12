@@ -33,6 +33,27 @@ struct Bid {
     }
 };
 
+    void displayUserProfile() const {
+        if (currentUserId.empty()) {
+            cout << "Please login first!" << endl;
+            return;
+        }
+        
+        const User& user = users.at(currentUserId);
+        cout << "\n=== User Profile ===" << endl;
+        cout << "Username: " << user.username << endl;
+        cout << "Email: " << user.email << endl;
+        cout << "Balance: $" << user.balance << endl;
+        cout << "Bids Placed: " << user.bidHistory.size() << endl;
+        cout << "Items Owned: " << user.ownedItems.size() << endl;
+        cout << "Items Sold: " << user.soldItems.size() << endl;
+        
+        if (!userAuctions.empty() && userAuctions.find(currentUserId) != userAuctions.end()) {
+            cout << "Auctions Created: " << userAuctions.at(currentUserId).size() << endl;
+        }
+    }
+
+
     void displayBidHistory(const string& itemId) {
         if (auctions.find(itemId) == auctions.end()) {
             cout << "Auction not found!" << endl;
