@@ -61,6 +61,107 @@ struct Item {
     }
 };
 
+class Auction {
+private:
+    Item item;
+    priority_queue<Bid> bids; // Max heap for bids
+    unordered_map<string, double> userHighestBids; // Track highest bid per user
+    vector<Bid> bidHistory; // Complete bid history
+    
+public:
+    Auction(const Item& itm) : item(itm) {}
+    
+    bool isActive() const {
+        return item.isActive && !item.isExpired();
+    }
+    
+    void endAuction() {
+        item.isActive = false;
+    }
+    
+    bool placeBid(const string& userId, double amount) {
+        if (!isActive()) {
+            cout << "Auction is not active!" << endl;
+            return false;
+        }
+        
+        if (amount <= item.startingPrice) {
+            cout << "Bid must be higher than starting price: $" << item.startingPrice << endl;
+            return false;
+        }
+        
+        // Check if bid is higher than current highest bid
+        if (!bids.empty() && amount <= bids.top().amount) {
+            cout << "Bid must be higher than current highest bid: $" << bids.top().amount << endl;
+            return false;
+        }
+        
+        // Check if user is trying to bid on their own item
+        if (userId == item.sellerId) {
+            cout << "Cannot bid on your own item!" << endl;
+            return false;
+        }
+        
+        Bid newBid(userId, amount, item.id);
+        bids.push(newBid);
+        bidHistory.push_back(newBid);
+        
+        // Update user's highest bid
+        userHighestBids[userId] = max(userHighestBids[userId], amount);
+        
+        cout << "Bid placed successfully! Current highest bid: $" << amount << endl;
+        return true;
+    }
+    
+    Bid getHighestBid() const {
+        if (bids.empty()) {
+            return Bid("", 0.0, item.id);
+        }
+        return bids.top();
+    }
+    
+    double getCurrentPrice() const {
+        if (bids.empty()) {
+            return item.startingPrice;
+        }
+        return bids.top().amount;
+    }
+    
+    const Item& getItem() const {
+        return item;
+    }
+    
+    vector<Bid> getBidHistory() const {
+        return bidHistory;
+    }
+    
+    unordered_map<string, double> getUserBids() const {
+        return userHighestBids;
+    }
+    
+    bool hasReserveBeenMet() const {
+        return getCurrentPrice() >= item.reservePrice;
+    }
+    
+    void displayAuctionInfo() const {
+        cout << "\n=== Auction Details ===" << endl;
+        cout << "Item: " << item.name << " (ID: " << item.id << ")" << endl;
+        cout << "Description: " << item.description << endl;
+        cout << "Starting Price: $" << item.startingPrice << endl;
+        cout << "Reserve Price: $" << item.reservePrice << endl;
+        cout << "Current Price: $" << getCurrentPrice() << endl;
+        cout << "Seller: " << item.sellerId << endl;
+        cout << "Status: " << (isActive() ? "Active" : "Ended") << endl;
+        cout << "Time Remaining: " << item.getRemainingSeconds() << " seconds" << endl;
+        cout << "Reserve Met: " << (hasReserveBeenMet() ? "Yes" : "No") << endl;
+        cout << "Total Bids: " << bidHistory.size() << endl;
+        
+        if (!bids.empty()) {
+            cout << "Highest Bidder: " << bids.top().userId << endl;
+        }
+    }
+};
+
 class User {
 public:
     string id;
