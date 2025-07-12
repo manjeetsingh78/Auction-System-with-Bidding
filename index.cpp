@@ -21,8 +21,7 @@ struct Bid {
     time_point<steady_clock> timestamp;
     string itemId;
     
-    Bid(const string& uid, double amt, const string& iid)
-        : userId(uid), amount(amt), timestamp(steady_clock::now()), itemId(iid) {}
+    Bid(const string& uid, double amt, const string& iid) : userId(uid), amount(amt), timestamp(steady_clock::now()), itemId(iid) {}
     
     // For priority queue (max heap based on amount)
     bool operator<(const Bid& other) const {
@@ -32,6 +31,36 @@ struct Bid {
         return timestamp > other.timestamp; // Earlier timestamp has higher priority for same amount
     }
 };
+
+struct Item {
+    string id;
+    string name;
+    string description;
+    double startingPrice;
+    double reservePrice;
+    string sellerId;
+    time_point<steady_clock> startTime;
+    time_point<steady_clock> endTime;
+    bool isActive;
+    
+    Item(const string& itemId, const string& itemName, const string& desc,
+         double startPrice, double reserve, const string& seller, int durationMinutes)
+        : id(itemId), name(itemName), description(desc), startingPrice(startPrice),
+          reservePrice(reserve), sellerId(seller), isActive(true) {
+        startTime = steady_clock::now();
+        endTime = startTime + minutes(durationMinutes);
+    }
+
+    bool isExpired() const {
+        return steady_clock::now() > endTime;
+    }
+    
+    int getRemainingSeconds() const {
+        auto remaining = duration_cast<seconds>(endTime - steady_clock::now());
+        return max(0, (int)remaining.count());
+    }
+};
+
 
     bool createAuction(const string& itemName, const string& description,double startingPrice, double reservePrice, int durationMinutes) {
         if (currentUserId.empty()) {
