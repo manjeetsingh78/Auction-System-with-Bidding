@@ -103,6 +103,55 @@ public:
 
 
 
+class AuctionSystem {
+private:
+    unordered_map<string, User> users;
+    unordered_map<string, Auction> auctions;
+    unordered_map<string, vector<string>> userAuctions; // user -> list of auction IDs
+    string currentUserId;
+    
+    string generateId() {
+        static int counter = 1000;
+        return "ID" + to_string(counter++);
+    }
+    
+public:
+    // User Management
+    bool registerUser(const string& username, const string& email, double initialBalance = 1000.0) {
+        string userId = generateId();
+        
+        // Check if username already exists
+        for (const auto& pair : users) {
+            if (pair.second.username == username) {
+                cout << "Username already exists!" << endl;
+                return false;
+            }
+        }
+        
+        users[userId] = User(userId, username, email, initialBalance);
+        cout << "User registered successfully! User ID: " << userId << endl;
+        return true;
+    }
+
+
+    bool loginUser(const string& username) {
+        for (const auto& pair : users) {
+            if (pair.second.username == username) {
+                currentUserId = pair.first;
+                cout << "Login successful! Welcome " << username << endl;
+                return true;
+            }
+        }
+        cout << "User not found!" << endl;
+        return false;
+    }
+
+
+    void logoutUser() {
+        currentUserId = "";
+        cout << "Logged out successfully!" << endl;
+    }
+
     bool createAuction(const string& itemName, const string& description,double startingPrice, double reservePrice, int durationMinutes) {
         if (currentUserId.empty()) {
             cout << "Please login first!" << endl;
@@ -171,57 +220,16 @@ public:
     }
 
 
-
-class AuctionSystem {
-private:
-    unordered_map<string, User> users;
-    unordered_map<string, Auction> auctions;
-    unordered_map<string, vector<string>> userAuctions; // user -> list of auction IDs
-    string currentUserId;
-    
-    string generateId() {
-        static int counter = 1000;
-        return "ID" + to_string(counter++);
-    }
-    
-public:
-    // User Management
-    bool registerUser(const string& username, const string& email, double initialBalance = 1000.0) {
-        string userId = generateId();
-        
-        // Check if username already exists
-        for (const auto& pair : users) {
-            if (pair.second.username == username) {
-                cout << "Username already exists!" << endl;
-                return false;
-            }
+    void displayAuctionDetails(const string& itemId) {
+        if (auctions.find(itemId) == auctions.end()) {
+            cout << "Auction not found!" << endl;
+            return;
         }
         
-        users[userId] = User(userId, username, email, initialBalance);
-        cout << "User registered successfully! User ID: " << userId << endl;
-        return true;
+        auctions[itemId].displayAuctionInfo();
     }
 
 
-    bool loginUser(const string& username) {
-        for (const auto& pair : users) {
-            if (pair.second.username == username) {
-                currentUserId = pair.first;
-                cout << "Login successful! Welcome " << username << endl;
-                return true;
-            }
-        }
-        cout << "User not found!" << endl;
-        return false;
-    }
-
-
-    void logoutUser() {
-        currentUserId = "";
-        cout << "Logged out successfully!" << endl;
-    }
-
-    
     void displayUserProfile() const {
         if (currentUserId.empty()) {
             cout << "Please login first!" << endl;
