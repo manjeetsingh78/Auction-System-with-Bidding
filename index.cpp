@@ -33,7 +33,19 @@ struct Bid {
     }
 };
 
-void searchAuctions(const string& keyword) const {
+
+    void addBalance(double amount) {
+        if (currentUserId.empty()) {
+            cout << "Please login first!" << endl;
+            return;
+        }
+        
+        users[currentUserId].addBalance(amount);
+        cout << "Balance added successfully! New balance: $" << users[currentUserId].balance << endl;
+    }
+
+    
+    void searchAuctions(const string& keyword) const {
         cout << "\n=== Search Results for: " << keyword << " ===" << endl;
         bool found = false;
         
@@ -50,7 +62,7 @@ void searchAuctions(const string& keyword) const {
         }
     }
 
-void displayTopBidders(const string& itemId) const {
+    void displayTopBidders(const string& itemId) const {
         if (auctions.find(itemId) == auctions.end()) {
             cout << "Auction not found!" << endl;
             return;
@@ -76,7 +88,7 @@ void displayTopBidders(const string& itemId) const {
     }
 
 
-void displayMenu() const {
+    void displayMenu() const {
         cout << "\n=== Auction System Menu ===" << endl;
         cout << "1. Register User" << endl;
         cout << "2. Login" << endl;
@@ -93,10 +105,11 @@ void displayMenu() const {
         cout << "13. View Top Bidders" << endl;
         cout << "0. Exit" << endl;
         cout << "Choice: ";
-}
+    }
 
 
-void run() {
+
+    void run() {
         int choice;
         string input, username, email, itemName, description, itemId, keyword;
         double startingPrice, reservePrice, amount;
