@@ -33,8 +33,7 @@ struct Bid {
     }
 };
 
-    bool createAuction(const string& itemName, const string& description,
-                      double startingPrice, double reservePrice, int durationMinutes) {
+    bool createAuction(const string& itemName, const string& description,double startingPrice, double reservePrice, int durationMinutes) {
         if (currentUserId.empty()) {
             cout << "Please login first!" << endl;
             return false;
@@ -82,9 +81,7 @@ struct Bid {
             if (pair.second.isActive()) {
                 hasActive = true;
                 const auto& item = pair.second.getItem();
-                cout << "ID: " << item.id << " | " << item.name 
-                     << " | Current Price: $" << pair.second.getCurrentPrice()
-                     << " | Time Left: " << item.getRemainingSeconds() << "s" << endl;
+                cout << "ID: " << item.id << " | " << item.name << " | Current Price: $" << pair.second.getCurrentPrice()<< " | Time Left: " << item.getRemainingSeconds() << "s" << endl;
             }
         }
         
@@ -122,6 +119,11 @@ struct Bid {
         if (!userAuctions.empty() && userAuctions.find(currentUserId) != userAuctions.end()) {
             cout << "Auctions Created: " << userAuctions.at(currentUserId).size() << endl;
         }
+    }
+
+    void logoutUser() {
+        currentUserId = "";
+        cout << "Logged out successfully!" << endl;
     }
 
 
