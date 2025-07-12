@@ -33,6 +33,43 @@ struct Bid {
     }
 };
 
+    void endAuction(const string& itemId) {
+        if (auctions.find(itemId) == auctions.end()) {
+            cout << "Auction not found!" << endl;
+            return;
+        }
+        
+        Auction& auction = auctions[itemId];
+        
+        if (!auction.isActive()) {
+            cout << "Auction already ended!" << endl;
+            return;
+        }
+        
+        auction.endAuction();
+        Bid highestBid = auction.getHighestBid();
+        
+        cout << "\n=== Auction Ended ===" << endl;
+        
+        if (highestBid.userId.empty()) {
+            cout << "No bids were placed. Item remains unsold." << endl;
+        } else if (!auction.hasReserveBeenMet()) {
+            cout << "Reserve price not met. Item remains unsold." << endl;
+            cout << "Highest bid: $" << highestBid.amount << " by " << highestBid.userId << endl;
+        } else {
+            cout << "Item sold to " << highestBid.userId << " for $" << highestBid.amount << endl;
+            
+            // Update user records
+            users[highestBid.userId].deductBalance(highestBid.amount);
+            users[highestBid.userId].addOwnedItem(itemId);
+            
+            const auto& item = auction.getItem();
+            users[item.sellerId].addBalance(highestBid.amount);
+            users[item.sellerId].addSoldItem(itemId);
+        }
+    }
+
+
 
     void addBalance(double amount) {
         if (currentUserId.empty()) {
