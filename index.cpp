@@ -33,6 +33,33 @@ struct Bid {
     }
 };
 
+    void displayBidHistory(const string& itemId) {
+        if (auctions.find(itemId) == auctions.end()) {
+            cout << "Auction not found!" << endl;
+            return;
+        }
+        
+        auto bidHistory = auctions[itemId].getBidHistory();
+        cout << "\n=== Bid History for " << itemId << " ===" << endl;
+        
+        if (bidHistory.empty()) {
+            cout << "No bids placed yet." << endl;
+            return;
+        }
+        
+        sort(bidHistory.begin(), bidHistory.end(), [](const Bid& a, const Bid& b) {
+            return a.amount > b.amount; // Sort by amount descending
+        });
+        
+        int rank = 1;
+        for (const auto& bid : bidHistory) {
+            cout << rank++ << ". User: " << bid.userId 
+                 << " | Amount: $" << bid.amount 
+                 << " | Time: " << duration_cast<seconds>(bid.timestamp.time_since_epoch()).count() % 10000 << endl;
+        }
+    }
+
+
     void endAuction(const string& itemId) {
         if (auctions.find(itemId) == auctions.end()) {
             cout << "Auction not found!" << endl;
