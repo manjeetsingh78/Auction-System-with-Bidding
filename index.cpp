@@ -61,6 +61,47 @@ struct Item {
     }
 };
 
+class User {
+public:
+    string id;
+    string username;
+    string email;
+    double balance;
+    vector<string> bidHistory;
+    vector<string> ownedItems;
+    vector<string> soldItems;
+    
+    User(const string& userId, const string& uname, const string& mail, double bal = 0.0)
+        : id(userId), username(uname), email(mail), balance(bal) {}
+    
+    bool canBid(double amount) const {
+        return balance >= amount;
+    }
+    
+    void deductBalance(double amount) {
+        if (balance >= amount) {
+            balance -= amount;
+        }
+    }
+    
+    void addBalance(double amount) {
+        balance += amount;
+    }
+    
+    void addBidToHistory(const string& itemId) {
+        bidHistory.push_back(itemId);
+    }
+    
+    void addOwnedItem(const string& itemId) {
+        ownedItems.push_back(itemId);
+    }
+    
+    void addSoldItem(const string& itemId) {
+        soldItems.push_back(itemId);
+    }
+};
+
+
 
     bool createAuction(const string& itemName, const string& description,double startingPrice, double reservePrice, int durationMinutes) {
         if (currentUserId.empty()) {
