@@ -33,6 +33,23 @@ struct Bid {
     }
 };
 
+    bool createAuction(const string& itemName, const string& description,
+                      double startingPrice, double reservePrice, int durationMinutes) {
+        if (currentUserId.empty()) {
+            cout << "Please login first!" << endl;
+            return false;
+        }
+        
+        string itemId = generateId();
+        Item item(itemId, itemName, description, startingPrice, reservePrice, currentUserId, durationMinutes);
+        auctions[itemId] = Auction(item);
+        userAuctions[currentUserId].push_back(itemId);
+        
+        cout << "Auction created successfully! Item ID: " << itemId << endl;
+        return true;
+    }
+
+
     bool placeBid(const string& itemId, double amount) {
         if (currentUserId.empty()) {
             cout << "Please login first!" << endl;
