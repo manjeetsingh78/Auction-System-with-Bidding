@@ -321,16 +321,6 @@ public:
     }
 
 
-    void displayAuctionDetails(const string& itemId) {
-        if (auctions.find(itemId) == auctions.end()) {
-            cout << "Auction not found!" << endl;
-            return;
-        }
-        
-        auctions[itemId].displayAuctionInfo();
-    }
-
-
     void displayUserProfile() const {
         if (currentUserId.empty()) {
             cout << "Please login first!" << endl;
