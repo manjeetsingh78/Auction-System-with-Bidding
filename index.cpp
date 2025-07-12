@@ -33,6 +33,26 @@ struct Bid {
     }
 };
 
+    void displayActiveAuctions() const {
+        cout << "\n=== Active Auctions ===" << endl;
+        bool hasActive = false;
+        
+        for (const auto& pair : auctions) {
+            if (pair.second.isActive()) {
+                hasActive = true;
+                const auto& item = pair.second.getItem();
+                cout << "ID: " << item.id << " | " << item.name 
+                     << " | Current Price: $" << pair.second.getCurrentPrice()
+                     << " | Time Left: " << item.getRemainingSeconds() << "s" << endl;
+            }
+        }
+        
+        if (!hasActive) {
+            cout << "No active auctions available." << endl;
+        }
+    }
+
+
     void displayAuctionDetails(const string& itemId) {
         if (auctions.find(itemId) == auctions.end()) {
             cout << "Auction not found!" << endl;
