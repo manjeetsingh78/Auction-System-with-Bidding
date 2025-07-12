@@ -121,6 +121,37 @@ struct Bid {
         }
     }
 
+class AuctionSystem {
+private:
+    unordered_map<string, User> users;
+    unordered_map<string, Auction> auctions;
+    unordered_map<string, vector<string>> userAuctions; // user -> list of auction IDs
+    string currentUserId;
+    
+    string generateId() {
+        static int counter = 1000;
+        return "ID" + to_string(counter++);
+    }
+    
+public:
+    // User Management
+    bool registerUser(const string& username, const string& email, double initialBalance = 1000.0) {
+        string userId = generateId();
+        
+        // Check if username already exists
+        for (const auto& pair : users) {
+            if (pair.second.username == username) {
+                cout << "Username already exists!" << endl;
+                return false;
+            }
+        }
+        
+        users[userId] = User(userId, username, email, initialBalance);
+        cout << "User registered successfully! User ID: " << userId << endl;
+        return true;
+    }
+
+
     bool loginUser(const string& username) {
         for (const auto& pair : users) {
             if (pair.second.username == username) {
