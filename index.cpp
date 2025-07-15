@@ -406,7 +406,7 @@ public:
     }
 
 
-
+    // Function to add balance to the user's account
     void addBalance(double amount) {
         if (currentUserId.empty()) {
             cout << "Please login first!" << endl;
